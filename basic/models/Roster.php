@@ -5,20 +5,20 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "users".
+ * This is the model class for table "rosters".
  *
  * @property integer $id
- * @property string $uuid
- * @property string $title
+ * @property integer $user_id
+ * @property integer $group_id
  */
-class User extends \yii\db\ActiveRecord
+class Roster extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'users';
+        return 'rosters';
     }
 
     /**
@@ -27,9 +27,8 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uuid', 'title'], 'required'],
-            [['uuid', 'title'], 'string', 'max' => 255],
-            [['uuid'], 'unique'],
+            [['user_id', 'group_id'], 'required'],
+            [['user_id', 'group_id'], 'integer'],
         ];
     }
 
@@ -40,8 +39,8 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'uuid' => 'Uuid',
-            'title' => 'Title',
+            'user_id' => 'User ID',
+            'group_id' => 'Group ID',
         ];
     }
 }
