@@ -9,7 +9,6 @@ use Yii;
  *
  * @property integer $id
  * @property string $uuid
- * @property string $title
  */
 class User extends \yii\db\ActiveRecord
 {
@@ -27,8 +26,8 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uuid', 'title'], 'required'],
-            [['uuid', 'title'], 'string', 'max' => 255],
+            [['uuid'], 'required'],
+            [['uuid'], 'string', 'max' => 255],
             [['uuid'], 'unique'],
         ];
     }
@@ -41,7 +40,6 @@ class User extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'uuid' => 'Uuid',
-            'title' => 'Title',
         ];
     }
 }

@@ -2,6 +2,8 @@
 
 namespace app\modules\rest\controllers;
 
+use app\models\Group;
+use app\models\Roster;
 use app\models\User;
 use yii\web\Controller;
 
@@ -40,7 +42,6 @@ class DefaultController extends Controller
 
 		$user = new User();
 		$user->uuid = $uuid;
-		$user->title = $uuid;
 
 		if ($user->save()) {
 			return [
@@ -54,8 +55,68 @@ class DefaultController extends Controller
 		}
 	}
 
-	public function actionAddParticipant($uuid)
+	public function actionAddparticipant()
 	{
+		$uuid = \Yii::$app->request->get('uuid');
+		$participantUuid = \Yii::$app->request->get('participant');
+		$title = \Yii::$app->request->get('title');
+		$groupTitle = \Yii::$app->request->get('group');
+
+
+		//Проверяем есть ли пользователь
+		if (!$user = User::findOne(['uuid' => $uuid])) {
+			return [
+				'result'  => 'error',
+				'message' => 'User not found',
+			];
+		}
+
+		//Проверяем существование группы
+		if (!$group = Group::findOne(['title' => $groupTitle])) {
+			$group = new Group();
+			$group->title = $groupTitle;
+			$group->save();
+		}
+
+		//Проверяем существование participant в users
+		if (!$participant = User::findOne(['uuid' => $participantUuid])) {
+			$participant = new User();
+			$participant->uuid = $participantUuid;
+			$participant->save();
+		}
+
+		//Если уже есть ростер с пользователем в группе вывод ошибки
+		if ($roster = Roster::findOne([
+			'user_id'        => $user->id,
+			'group_id'       => $group->id,
+			'participant_id' => $participant->id,
+		])
+		) {
+			return [
+				'result'  => 'error',
+				'message' => 'Participant is already in group',
+			];
+		} else {
+			//Создаем запись в ростере
+			$roster = new Roster();
+			$roster->user_id = $user->id;
+			$roster->group_id = $group->id;
+			$roster->participant_id = $participant->id;
+			$roster->title = $title;
+
+			if($roster->save()){
+				return [
+					'result' => 'ok',
+				];
+			}else{
+				return [
+					'result'  => 'error',
+					'message' => $roster->errors,
+				];
+			}
+		}
+
+
 
 	}
 

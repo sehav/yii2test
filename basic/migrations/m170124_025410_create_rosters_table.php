@@ -16,6 +16,8 @@ class m170124_025410_create_rosters_table extends Migration
 			'id'       => $this->primaryKey(),
 			'user_id'  => $this->integer()->notNull(),
 			'group_id' => $this->integer()->notNull(),
+			'title' => $this->string()->notNull(),
+			'participant_id' => $this->integer()->notNull(),
 		]);
 	}
 

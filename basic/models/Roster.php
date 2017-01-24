@@ -10,6 +10,8 @@ use Yii;
  * @property integer $id
  * @property integer $user_id
  * @property integer $group_id
+ * @property string $title
+ * @property integer $participant_id
  */
 class Roster extends \yii\db\ActiveRecord
 {
@@ -27,8 +29,9 @@ class Roster extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'group_id'], 'required'],
-            [['user_id', 'group_id'], 'integer'],
+            [['user_id', 'group_id', 'title', 'participant_id'], 'required'],
+            [['user_id', 'group_id', 'participant_id'], 'integer'],
+            [['title'], 'string', 'max' => 255],
         ];
     }
 
@@ -41,6 +44,8 @@ class Roster extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User ID',
             'group_id' => 'Group ID',
+            'title' => 'Title',
+            'participant_id' => 'Participant ID',
         ];
     }
 }

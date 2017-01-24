@@ -15,7 +15,6 @@ class m170124_024743_create_users_table extends Migration
 		$this->createTable('users', [
 			'id'    => $this->primaryKey(),
 			'uuid'  => $this->string()->notNull()->unique(),
-			'title' => $this->string()->notNull(),
 		]);
 	}
 
