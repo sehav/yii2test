@@ -49,6 +49,11 @@ class Roster extends \yii\db\ActiveRecord
 		];
 	}
 
+	public function getGroup()
+	{
+		return $this->hasOne(Group::className(), ['id' => 'group_id']);
+	}
+
 	/**
 	 * Удаляем пустую группу, при отсутствии записей в ростере с этой группой
 	 * @return bool

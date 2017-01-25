@@ -12,34 +12,43 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'users';
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'users';
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['uuid'], 'required'],
-            [['uuid'], 'string', 'max' => 255],
-            [['uuid'], 'unique'],
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['uuid'], 'required'],
+			[['uuid'], 'string', 'max' => 255],
+			[['uuid'], 'unique'],
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'uuid' => 'Uuid',
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'id'   => 'ID',
+			'uuid' => 'Uuid',
+		];
+	}
+
+	/**
+	 * Связь Пользователь->Ростер
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getRoster()
+	{
+		return $this->hasMany(Roster::className(), ['user_id' => 'id']);
+	}
 }
