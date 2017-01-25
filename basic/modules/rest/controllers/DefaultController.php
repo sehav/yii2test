@@ -22,6 +22,11 @@ class DefaultController extends Controller
 		return ['aas' => 'asd', 2, 3];
 	}
 
+	/**
+	 * Вывод ростера
+	 * uuid
+	 * @return array
+	 */
 	public function actionGetroster()
 	{
 		$uuid = \Yii::$app->request->get('uuid');
@@ -104,9 +109,70 @@ class DefaultController extends Controller
 			$roster->participant_id = $participant->id;
 			$roster->title = $title;
 
-			if($roster->save()){
+			if ($roster->save()) {
 				return [
 					'result' => 'ok',
+				];
+			} else {
+				return [
+					'result'  => 'error',
+					'message' => $roster->errors,
+				];
+			}
+		}
+	}
+
+	public function actionRemoveparticipant()
+	{
+
+	}
+
+	/**
+	 * Изменение title записи в ростере
+	 * uuid, participant, title, group
+	 */
+	public function actionRenameparticipant()
+	{
+		$uuid = \Yii::$app->request->get('uuid');
+		$participantUuid = \Yii::$app->request->get('participant');
+		$title = \Yii::$app->request->get('title');
+		$groupTitle = \Yii::$app->request->get('group');
+
+		//Проверяем есть ли пользователь
+		if (!$user = User::findOne(['uuid' => $uuid])) {
+			return [
+				'result'  => 'error',
+				'message' => 'User not found',
+			];
+		}
+
+		//Проверяем существование группы
+		if (!$group = Group::findOne(['title' => $groupTitle])) {
+			return [
+				'result'  => 'error',
+				'message' => 'Group not found',
+			];
+		}
+
+		//Проверяем существование participant в users
+		if (!$participant = User::findOne(['uuid' => $participantUuid])) {
+			return [
+				'result'  => 'error',
+				'message' => 'Participant not found',
+			];
+		}
+
+		//Если уже есть ростер с пользователем в группе - меняем title
+		if ($roster = Roster::findOne([
+			'user_id'        => $user->id,
+			'group_id'       => $group->id,
+			'participant_id' => $participant->id,
+		])
+		) {
+			$roster->title = $title;
+			if($roster->save()){
+				return [
+					'result'  => 'ok',
 				];
 			}else{
 				return [
@@ -114,19 +180,11 @@ class DefaultController extends Controller
 					'message' => $roster->errors,
 				];
 			}
+		} else {
+			return [
+				'result'  => 'error',
+				'message' => 'User not found in group',
+			];
 		}
-
-
-
-	}
-
-	public function actionRemoveParticipant()
-	{
-
-	}
-
-	public function actionRenameParticipant()
-	{
-
 	}
 }
