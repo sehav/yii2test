@@ -122,9 +122,63 @@ class DefaultController extends Controller
 		}
 	}
 
+	/**
+	 * Удаление записи из ростера
+	 * uuid, participant, group
+	 */
 	public function actionRemoveparticipant()
 	{
+		$uuid = \Yii::$app->request->get('uuid');
+		$participantUuid = \Yii::$app->request->get('participant');
+		$groupTitle = \Yii::$app->request->get('group');
 
+		//Проверяем есть ли пользователь
+		if (!$user = User::findOne(['uuid' => $uuid])) {
+			return [
+				'result'  => 'error',
+				'message' => 'User not found',
+			];
+		}
+
+		//Проверяем существование группы
+		if (!$group = Group::findOne(['title' => $groupTitle])) {
+			return [
+				'result'  => 'error',
+				'message' => 'Group not found',
+			];
+		}
+
+		//Проверяем существование participant в users
+		if (!$participant = User::findOne(['uuid' => $participantUuid])) {
+			return [
+				'result'  => 'error',
+				'message' => 'Participant not found',
+			];
+		}
+
+		//Если уже есть ростер с пользователем в группе - удаляем
+		if ($roster = Roster::findOne([
+			'user_id'        => $user->id,
+			'group_id'       => $group->id,
+			'participant_id' => $participant->id,
+		])
+		) {
+			if ($roster->delete()) {
+				return [
+					'result' => 'ok',
+				];
+			} else {
+				return [
+					'result'  => 'error',
+					'message' => $roster->errors,
+				];
+			}
+		} else {
+			return [
+				'result'  => 'error',
+				'message' => 'Participant not found in roster',
+			];
+		}
 	}
 
 	/**
@@ -170,11 +224,11 @@ class DefaultController extends Controller
 		])
 		) {
 			$roster->title = $title;
-			if($roster->save()){
+			if ($roster->save()) {
 				return [
-					'result'  => 'ok',
+					'result' => 'ok',
 				];
-			}else{
+			} else {
 				return [
 					'result'  => 'error',
 					'message' => $roster->errors,
