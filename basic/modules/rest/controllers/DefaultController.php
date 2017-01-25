@@ -31,8 +31,42 @@ class DefaultController extends Controller
 	{
 		$uuid = \Yii::$app->request->get('uuid');
 
-		if ($user = User::findOne(['uuid' => $uuid])) {
+		if ($user = User::find()
+			->where(['uuid' => $uuid])
+			->with('roster')
+			->one()
+		) {
+			$roster = [];
 
+			//Берем список всех групп в ростере
+			$groups = array_column($user->roster, 'group', 'group_id');
+
+			foreach ($groups as $group) {
+				$rosterItem = [
+					'groupTitle' => $group->title,
+				];
+
+				$users = [];
+				foreach ($user->roster as $r) {
+					if ($r->group_id == $group->id) {
+						$users[] = [
+							'title' => $r->title,
+							'uuid'  => $r->participant->uuid,
+						];
+					}
+				}
+
+				$rosterItem['users'] = $users;
+
+				$roster[] = $rosterItem;
+			}
+
+			$response = [
+				'result' => 'ok',
+				'roster' => $roster,
+			];
+
+			return $response;
 		} else {
 			return [
 				'result'  => 'error',
@@ -41,6 +75,11 @@ class DefaultController extends Controller
 		}
 	}
 
+	/**
+	 * Создаем пользователя
+	 * uuid
+	 * @return array
+	 */
 	public function actionCreateuser()
 	{
 		$uuid = \Yii::$app->request->get('uuid');
@@ -60,6 +99,11 @@ class DefaultController extends Controller
 		}
 	}
 
+	/**
+	 * Добавляем запись в ростер
+	 * uuid, participant, title, group
+	 * @return array
+	 */
 	public function actionAddparticipant()
 	{
 		$uuid = \Yii::$app->request->get('uuid');

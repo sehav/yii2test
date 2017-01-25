@@ -1,53 +1,171 @@
 <?php
 
+use yii\helpers\Url;
+use yii\bootstrap\ActiveForm;
+use app\models\User;
+use yii\bootstrap\Dropdown;
+
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+$this->title = 'Rest Gui Application';
 ?>
-<div class="site-index">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
+<section class="response">
+	<h2>Response</h2>
+	<pre id="response">
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+	</pre>
+</section>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
+<section>
+	<h2>getRoster</h2>
+	<form class="ajaxForm" action="<?= Url::to(['rest/getroster']); ?>" method="get">
+		<label>
+			Выберите пользователя
+			<select name="uuid" class="form-control">
+				<?php
+				$users = User::find()->all();
+				foreach($users as $user){
+					echo "<option value='{$user->uuid}'>{$user->uuid}</option>";
+				}
+				?>
+			</select>
+		</label>
+		<input type="submit">
+	</form>
+</section>
+<hr/>
 
-    <div class="body-content">
+<section>
+	<h2>CreateUser</h2>
+	<form class="ajaxForm" action="<?= Url::to(['rest/createuser']); ?>" method="get">
+		<label>
+			Добавить пользователя
+			<input type="text" name="uuid" placeholder="UUID"/>
+		</label>
+		<input type="submit">
+	</form>
+</section>
+<hr/>
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+<section>
+	<h2>addParticipant</h2>
+	<form class="ajaxForm" action="<?= Url::to(['rest/addparticipant']); ?>" method="get">
+		<label>
+			Выберите пользователя
+			<select name="uuid">
+				<?php
+				$users = User::find()->all();
+				foreach($users as $user){
+					echo "<option value='{$user->uuid}'>{$user->uuid}</option>";
+				}
+				?>
+			</select>
+		</label><br/>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+		<label>
+			UUID контакта
+			<input type="text" name="participant" placeholder="UUID"/>
+		</label><br/>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+		<label>
+			Title контакта
+			<input type="text" name="title" placeholder="title"/>
+		</label><br/>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+		<label>
+			Группа
+			<input type="text" name="group" placeholder="group"/>
+		</label>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+		<input type="submit">
+	</form>
+</section>
+<hr/>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+<section>
+	<h2>RemoveParticipant</h2>
+	<form class="ajaxForm" action="<?= Url::to(['rest/removeparticipant']); ?>" method="get">
+		<label>
+			Выберите пользователя
+			<select name="uuid">
+				<?php
+				$users = User::find()->all();
+				foreach($users as $user){
+					echo "<option value='{$user->uuid}'>{$user->uuid}</option>";
+				}
+				?>
+			</select>
+		</label><br/>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
+		<label>
+			UUID контакта
+			<input type="text" name="participant" placeholder="UUID"/>
+		</label><br/>
 
-    </div>
-</div>
+		<label>
+			Группа
+			<input type="text" name="group" placeholder="group"/>
+		</label>
+		<input type="submit">
+	</form>
+</section>
+<hr/>
+
+<section>
+	<h2>RenameParticipant</h2>
+	<form class="ajaxForm" action="<?= Url::to(['rest/renameparticipant']); ?>" method="get">
+		<label>
+			Выберите пользователя
+			<select name="uuid">
+				<?php
+				$users = User::find()->all();
+				foreach($users as $user){
+					echo "<option value='{$user->uuid}'>{$user->uuid}</option>";
+				}
+				?>
+			</select>
+		</label><br/>
+
+		<label>
+			UUID контакта
+			<input type="text" name="participant" placeholder="UUID"/>
+		</label><br/>
+
+		<label>
+			Title контакта
+			<input type="text" name="title" placeholder="title"/>
+		</label><br/>
+
+		<label>
+			Группа
+			<input type="text" name="group" placeholder="group"/>
+		</label>
+
+		<input type="submit">
+	</form>
+</section>
+<hr/>
+
+
+
+<script>
+	$(function () {
+		$('.ajaxForm').submit(function (e) {
+			e.preventDefault();
+			var form = $(this);
+			var data = form.serialize();
+
+			$.ajax({
+				url: form.attr('action'),
+				data: data,
+				dataType: 'text',
+				success: function (response) {
+					console.log(response);
+					$('#response').html(response);
+				}
+			})
+		})
+	});
+</script>
+

@@ -54,8 +54,8 @@ class Roster extends \yii\db\ActiveRecord
 		return $this->hasOne(Group::className(), ['id' => 'group_id']);
 	}
 
-	public function getParticipants(){
-		return $this->hasMany(User::className(), ['id' => 'participant_id']);
+	public function getParticipant(){
+		return $this->hasOne(User::className(), ['id' => 'participant_id']);
 	}
 
 	/**
